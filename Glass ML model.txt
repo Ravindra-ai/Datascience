@@ -1,0 +1,203 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+glass = pd.read_csv("D:\\Data Science\\Data Sets\\glass.csv")
+glass
+RI	Na	Mg	Al	Si	K	Ca	Ba	Fe	Type
+0	1.52101	13.64	4.49	1.10	71.78	0.06	8.75	0.00	0.0	1
+1	1.51761	13.89	3.60	1.36	72.73	0.48	7.83	0.00	0.0	1
+2	1.51618	13.53	3.55	1.54	72.99	0.39	7.78	0.00	0.0	1
+3	1.51766	13.21	3.69	1.29	72.61	0.57	8.22	0.00	0.0	1
+4	1.51742	13.27	3.62	1.24	73.08	0.55	8.07	0.00	0.0	1
+...	...	...	...	...	...	...	...	...	...	...
+209	1.51623	14.14	0.00	2.88	72.61	0.08	9.18	1.06	0.0	7
+210	1.51685	14.92	0.00	1.99	73.06	0.00	8.40	1.59	0.0	7
+211	1.52065	14.36	0.00	2.02	73.42	0.00	8.44	1.64	0.0	7
+212	1.51651	14.38	0.00	1.94	73.61	0.00	8.48	1.57	0.0	7
+213	1.51711	14.23	0.00	2.08	73.36	0.00	8.62	1.67	0.0	7
+214 rows × 10 columns
+
+glass.describe()
+RI	Na	Mg	Al	Si	K	Ca	Ba	Fe	Type
+count	214.000000	214.000000	214.000000	214.000000	214.000000	214.000000	214.000000	214.000000	214.000000	214.000000
+mean	1.518365	13.407850	2.684533	1.444907	72.650935	0.497056	8.956963	0.175047	0.057009	2.780374
+std	0.003037	0.816604	1.442408	0.499270	0.774546	0.652192	1.423153	0.497219	0.097439	2.103739
+min	1.511150	10.730000	0.000000	0.290000	69.810000	0.000000	5.430000	0.000000	0.000000	1.000000
+25%	1.516523	12.907500	2.115000	1.190000	72.280000	0.122500	8.240000	0.000000	0.000000	1.000000
+50%	1.517680	13.300000	3.480000	1.360000	72.790000	0.555000	8.600000	0.000000	0.000000	2.000000
+75%	1.519157	13.825000	3.600000	1.630000	73.087500	0.610000	9.172500	0.000000	0.100000	3.000000
+max	1.533930	17.380000	4.490000	3.500000	75.410000	6.210000	16.190000	3.150000	0.510000	7.000000
+plot.glass["RI"]
+---------------------------------------------------------------------------
+NameError                                 Traceback (most recent call last)
+<ipython-input-7-298716ddc0e1> in <module>
+----> 1 plot.glass["RI"]
+
+NameError: name 'plot' is not defined
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.model_selection import train_test_split
+glass.head()
+RI	Na	Mg	Al	Si	K	Ca	Ba	Fe	Type
+0	1.52101	13.64	4.49	1.10	71.78	0.06	8.75	0.0	0.0	1
+1	1.51761	13.89	3.60	1.36	72.73	0.48	7.83	0.0	0.0	1
+2	1.51618	13.53	3.55	1.54	72.99	0.39	7.78	0.0	0.0	1
+3	1.51766	13.21	3.69	1.29	72.61	0.57	8.22	0.0	0.0	1
+4	1.51742	13.27	3.62	1.24	73.08	0.55	8.07	0.0	0.0	1
+y = glass.iloc[:,9:10]
+y
+Type
+0	1
+1	1
+2	1
+3	1
+4	1
+...	...
+209	7
+210	7
+211	7
+212	7
+213	7
+214 rows × 1 columns
+
+x = glass.iloc[:,0:9]
+x
+RI	Na	Mg	Al	Si	K	Ca	Ba	Fe
+0	1.52101	13.64	4.49	1.10	71.78	0.06	8.75	0.00	0.0
+1	1.51761	13.89	3.60	1.36	72.73	0.48	7.83	0.00	0.0
+2	1.51618	13.53	3.55	1.54	72.99	0.39	7.78	0.00	0.0
+3	1.51766	13.21	3.69	1.29	72.61	0.57	8.22	0.00	0.0
+4	1.51742	13.27	3.62	1.24	73.08	0.55	8.07	0.00	0.0
+...	...	...	...	...	...	...	...	...	...
+209	1.51623	14.14	0.00	2.88	72.61	0.08	9.18	1.06	0.0
+210	1.51685	14.92	0.00	1.99	73.06	0.00	8.40	1.59	0.0
+211	1.52065	14.36	0.00	2.02	73.42	0.00	8.44	1.64	0.0
+212	1.51651	14.38	0.00	1.94	73.61	0.00	8.48	1.57	0.0
+213	1.51711	14.23	0.00	2.08	73.36	0.00	8.62	1.67	0.0
+214 rows × 9 columns
+
+x_train,x_test,y_train,y_test = train_test_split(x,y, test_size = 0.20)
+neigh = KNeighborsClassifier(n_neighbors= 5)
+neigh.fit(x_train,y_train)
+C:\Users\Ravi\anaconda3\lib\site-packages\ipykernel_launcher.py:1: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+  """Entry point for launching an IPython kernel.
+KNeighborsClassifier(algorithm='auto', leaf_size=30, metric='minkowski',
+                     metric_params=None, n_jobs=None, n_neighbors=5, p=2,
+                     weights='uniform')
+y_pred = neigh.predict(x_test)
+y_pred
+array([7, 2, 1, 7, 2, 2, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 7, 1, 1, 2, 6, 2,
+       1, 1, 1, 2, 5, 2, 7, 2, 7, 7, 1, 1, 7, 1, 7, 1, 5, 1, 2, 1, 2],
+      dtype=int64)
+plt.scatter(y_test,y_pred, s=area,c=colors, alpha=0.5)
+---------------------------------------------------------------------------
+NameError                                 Traceback (most recent call last)
+<ipython-input-25-64993f407683> in <module>
+----> 1 plt.scatter(y_test,y_pred, s=area,c=colors, alpha=0.5)
+
+NameError: name 'area' is not defined
+plt.xlabel('ytest')
+plt.ylabel('Ypred')
+plt.plot(y_test, y_test)
+plt.plot(y_test, y_test,"o")
+plt.plot(y_pred, y_pred)
+plt.plot(y_pred,y_pred,",")
+[<matplotlib.lines.Line2D at 0x19ec2bcec08>]
+
+from sklearn import metrics
+print("Accuracy:",metrics.accuracy_score(y_test, y_pred))
+Accuracy: 0.6744186046511628
+from sklearn.linear_model import LogisticRegression
+log = LogisticRegression()
+log.fit(x_train,y_train)
+C:\Users\Ravi\anaconda3\lib\site-packages\sklearn\utils\validation.py:760: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+  y = column_or_1d(y, warn=True)
+C:\Users\Ravi\anaconda3\lib\site-packages\sklearn\linear_model\_logistic.py:940: ConvergenceWarning: lbfgs failed to converge (status=1):
+STOP: TOTAL NO. of ITERATIONS REACHED LIMIT.
+
+Increase the number of iterations (max_iter) or scale the data as shown in:
+    https://scikit-learn.org/stable/modules/preprocessing.html
+Please also refer to the documentation for alternative solver options:
+    https://scikit-learn.org/stable/modules/linear_model.html#logistic-regression
+  extra_warning_msg=_LOGISTIC_SOLVER_CONVERGENCE_MSG)
+LogisticRegression(C=1.0, class_weight=None, dual=False, fit_intercept=True,
+                   intercept_scaling=1, l1_ratio=None, max_iter=100,
+                   multi_class='auto', n_jobs=None, penalty='l2',
+                   random_state=None, solver='lbfgs', tol=0.0001, verbose=0,
+                   warm_start=False)
+yp = log.predict(x_test)
+print("Logmodel accuracy:",metrics.accuracy_score(y_test,yp))
+Logmodel accuracy: 0.6744186046511628
+from sklearn.SVM import SVC
+---------------------------------------------------------------------------
+ModuleNotFoundError                       Traceback (most recent call last)
+<ipython-input-44-29b929ec129d> in <module>
+----> 1 from sklearn.SVM import SVC
+
+ModuleNotFoundError: No module named 'sklearn.SVM'
+from sklearn.svm import SVC
+svc = SVC(kernel = "linear")
+svc.fit(x_train,y_train)
+C:\Users\Ravi\anaconda3\lib\site-packages\sklearn\utils\validation.py:760: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+  y = column_or_1d(y, warn=True)
+SVC(C=1.0, break_ties=False, cache_size=200, class_weight=None, coef0=0.0,
+    decision_function_shape='ovr', degree=3, gamma='scale', kernel='linear',
+    max_iter=-1, probability=False, random_state=None, shrinking=True,
+    tol=0.001, verbose=False)
+ ysvc = svc.predict(x_test)
+print("accuracy of Support vector machine model is",metrics.accuracy_score(y_test,ysvc))
+accuracy of Support vector machine model is 0.6511627906976745
+svc = SVC(kernel = "gaussian")
+svc.fit(x_train,y_train)
+C:\Users\Ravi\anaconda3\lib\site-packages\sklearn\utils\validation.py:760: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+  y = column_or_1d(y, warn=True)
+---------------------------------------------------------------------------
+ValueError                                Traceback (most recent call last)
+<ipython-input-55-069a69ad986d> in <module>
+----> 1 svc.fit(x_train,y_train)
+
+~\anaconda3\lib\site-packages\sklearn\svm\_base.py in fit(self, X, y, sample_weight)
+    197 
+    198         seed = rnd.randint(np.iinfo('i').max)
+--> 199         fit(X, y, sample_weight, solver_type, kernel, random_seed=seed)
+    200         # see comment on the other call to np.iinfo in this file
+    201 
+
+~\anaconda3\lib\site-packages\sklearn\svm\_base.py in _dense_fit(self, X, y, sample_weight, solver_type, kernel, random_seed)
+    256                 cache_size=self.cache_size, coef0=self.coef0,
+    257                 gamma=self._gamma, epsilon=self.epsilon,
+--> 258                 max_iter=self.max_iter, random_seed=random_seed)
+    259 
+    260         self._warn_from_fit_status()
+
+sklearn\svm\_libsvm.pyx in sklearn.svm._libsvm.fit()
+
+ValueError: 'gaussian' is not in list
+from sklearn.ensemble import RandomForestRegressor
+regressor = RandomForestRegressor(n_estimators= 200,random_state = 0)
+regressor.fit(x_train,y_train)
+C:\Users\Ravi\anaconda3\lib\site-packages\ipykernel_launcher.py:2: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples,), for example using ravel().
+  
+RandomForestRegressor(bootstrap=True, ccp_alpha=0.0, criterion='mse',
+                      max_depth=None, max_features='auto', max_leaf_nodes=None,
+                      max_samples=None, min_impurity_decrease=0.0,
+                      min_impurity_split=None, min_samples_leaf=1,
+                      min_samples_split=2, min_weight_fraction_leaf=0.0,
+                      n_estimators=200, n_jobs=None, oob_score=False,
+                      random_state=0, verbose=0, warm_start=False)
+ryp =regressor.predict(x_test)
+ryp
+array([6.965, 2.425, 1.175, 7.   , 1.98 , 1.855, 4.705, 1.145, 1.94 ,
+       2.005, 3.015, 2.235, 1.87 , 2.62 , 2.07 , 4.38 , 6.275, 1.915,
+       1.035, 1.4  , 4.035, 2.015, 1.075, 1.46 , 1.74 , 1.97 , 4.235,
+       3.625, 6.655, 4.64 , 5.995, 6.735, 1.75 , 1.21 , 5.81 , 1.105,
+       6.95 , 2.285, 4.695, 2.835, 1.925, 2.135, 2.275])
+ 
+print(ryp,ysvc,yp)
+[6.965 2.425 1.175 7.    1.98  1.855 4.705 1.145 1.94  2.005 3.015 2.235
+ 1.87  2.62  2.07  4.38  6.275 1.915 1.035 1.4   4.035 2.015 1.075 1.46
+ 1.74  1.97  4.235 3.625 6.655 4.64  5.995 6.735 1.75  1.21  5.81  1.105
+ 6.95  2.285 4.695 2.835 1.925 2.135 2.275] [7 2 1 7 2 1 5 1 2 2 2 2 2 2 2 7 7 1 1 1 1 2 1 1 1 2 2 2 7 2 7 7 1 1 6 1 7
+ 1 5 2 2 2 2] [7 2 1 7 2 2 2 1 2 2 2 1 2 2 2 7 7 1 1 2 2 2 1 1 1 2 2 2 7 2 7 7 1 1 7 1 7
+ 2 2 1 2 2 2]
+regressor.score(x_test,y_test)
+0.8427773114321873
